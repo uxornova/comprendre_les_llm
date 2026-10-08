@@ -24,6 +24,30 @@ Choisir l'interpréteur Python : `Ctrl+Shift+P` → **Python: Select Interpreter
 
 Optionnel (partie API) : `export OPENAI_API_KEY="sk-..."` avant de lancer VS Code.
 
+## L'application web (front ↔ back)
+
+Une petite application montre comment une interface web discute avec un serveur qui fait tourner le modèle :
+
+```
+ navigateur (front)                       serveur Python (back)
+ app/frontend/index.html  ── POST JSON ──►  app/backend.py (FastAPI)
+  boutons, graphiques      ◄── JSON ─────   GPT-2 chargé une fois au démarrage
+```
+
+```bash
+uvicorn app.backend:app --reload
+```
+
+Puis ouvrir http://localhost:8000. Chaque requête et sa réponse JSON s'affichent dans le panneau
+« Journal des échanges ». La documentation interactive de l'API est sur http://localhost:8000/docs.
+
+| Route | Rôle |
+|---|---|
+| `GET /api/sante` | Vérifie que le back répond (modèle, RAM utilisée) |
+| `POST /api/tokens` | Découpe un texte en tokens |
+| `POST /api/mot-suivant` | Probabilités des 10 mots suivants les plus probables |
+| `POST /api/generer` | Génère la suite du texte |
+
 ## Le cache
 
 Les fonctions décorées par `@cache_resultat` enregistrent leur résultat dans `cache/`.
