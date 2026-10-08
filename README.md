@@ -6,6 +6,8 @@ dimensionnement RAM (local vs API) et un cas data science avec mise en cache des
 ## Installation
 
 ```bash
+git clone https://github.com/uxornova/comprendre_les_llm.git
+cd comprendre_les_llm
 python3 -m venv .venv
 source .venv/bin/activate
 pip install torch --index-url https://download.pytorch.org/whl/cpu
