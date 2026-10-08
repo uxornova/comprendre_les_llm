@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Comprendre les LLM — démo</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header>
+  <h1>Comprendre les LLM — démo front ↔ back</h1>
+  <p>Cette page (le <b>front</b>) envoie votre texte au serveur Python (le <b>back</b>), qui interroge GPT-2 et renvoie du JSON.</p>
+  <div class="statut"><span class="point" id="point"></span><span id="statut">Connexion au back…</span></div>
+</header>
+
+<main>
+  <section>
+    <div class="carte">
+      <h2>1. Votre texte</h2>
+      <textarea id="texte">The best way to learn machine learning is to</textarea>
+      <div class="reglages">
+        <label>Température <input type="range" id="temperature" min="0.1" max="1.5" step="0.1" value="0.8">
+          <output id="temp-val">0.8</output></label>
+        <label>Tokens à générer <input type="number" id="nb-tokens" min="1" max="150" value="40" style="width:64px"></label>
+      </div>
+      <div class="boutons">
+        <button class="b-tokens" data-feature="tokens">Découper en tokens</button>
+        <button class="b-suivant" data-feature="nextWord">Prédire le mot suivant</button>
+        <button class="b-generer" data-feature="generate">Générer la suite</button>
+      </div>
+    </div>
+
+    <div class="carte">
+      <h2>2. Résultat</h2>
+      <div id="resultat"><p class="vide">Cliquez sur un bouton : le résultat calculé par le back s'affichera ici.</p></div>
+    </div>
+  </section>
+
+  <aside class="carte">
+    <div class="journal-tete">
+      <h2>3. Journal des échanges front ↔ back</h2>
+      <button id="vider">vider</button>
+    </div>
+    <div id="journal"><p class="vide">Chaque requête envoyée au back et sa réponse JSON apparaîtront ici.</p></div>
+  </aside>
+</main>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>

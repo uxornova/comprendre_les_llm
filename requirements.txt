@@ -1,6 +1,7 @@
-# PyTorch CPU (plus léger) : pip install torch --index-url https://download.pytorch.org/whl/cpu
-torch
-transformers
+# Back-end (API)
+-r backend/requirements.txt
+
+# Notebooks
 sentence-transformers
 datasets
 numpy
@@ -8,9 +9,6 @@ pandas
 matplotlib
 scikit-learn
 joblib
-psutil
 jinja2
 ipykernel
 openai
-fastapi
-uvicorn

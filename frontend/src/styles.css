@@ -1,0 +1,58 @@
+:root {
+  --fond: #f6f6f4; --carte: #ffffff; --bord: #e3e2dc; --texte: #1b1b1a; --doux: #6b6a65;
+  --bleu: #2a78d6; --vert: #1baf7a; --orange: #eb6834; --violet: #7a5af8; --code: #f1f0ec;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --fond: #141413; --carte: #1e1e1d; --bord: #33332f; --texte: #f2f1ec; --doux: #a6a59f;
+    --bleu: #3987e5; --code: #262624;
+  }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--fond); color: var(--texte);
+       font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif; }
+header { background: linear-gradient(135deg, #1e2a4a, #2a78d6); color: #fff; padding: 22px 24px; }
+header h1 { margin: 0; font-size: 24px; }
+header p { margin: 4px 0 0; opacity: .85; }
+.statut { display: inline-flex; align-items: center; gap: 6px; margin-top: 10px; font-size: 13px;
+          background: rgba(255,255,255,.15); padding: 4px 10px; border-radius: 20px; }
+.point { width: 9px; height: 9px; border-radius: 50%; background: #c3c2b7; }
+.point.ok { background: #3ddc97; } .point.ko { background: #ff6b6b; }
+main { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 18px;
+       padding: 18px 24px; max-width: 1300px; margin: 0 auto; }
+@media (max-width: 900px) { main { grid-template-columns: 1fr; padding: 14px 16px; } }
+.carte { background: var(--carte); border: 1px solid var(--bord); border-radius: 12px; padding: 16px 18px; }
+.carte + .carte { margin-top: 18px; }
+h2 { font-size: 15px; margin: 0 0 10px; }
+textarea { width: 100%; min-height: 80px; padding: 10px; border-radius: 8px; border: 1px solid var(--bord);
+           background: var(--fond); color: var(--texte); font: inherit; resize: vertical; }
+.reglages { display: flex; flex-wrap: wrap; gap: 14px; margin: 10px 0; font-size: 13px; color: var(--doux); }
+.reglages label { display: flex; align-items: center; gap: 6px; }
+.reglages input[type=number] { background: var(--fond); color: var(--texte); border: 1px solid var(--bord);
+                               border-radius: 6px; padding: 3px 6px; font: inherit; }
+.boutons { display: flex; flex-wrap: wrap; gap: 8px; }
+button { border: 0; border-radius: 8px; padding: 9px 14px; font: inherit; font-weight: 600;
+         color: #fff; cursor: pointer; }
+button:disabled { opacity: .5; cursor: wait; }
+.b-tokens { background: var(--violet); } .b-suivant { background: var(--bleu); } .b-generer { background: var(--vert); }
+#resultat { min-height: 120px; }
+.vide { color: var(--doux); font-style: italic; }
+.token { display: inline-block; padding: 2px 5px; margin: 2px; border-radius: 4px;
+         font-family: ui-monospace, monospace; font-size: 13px; color: #0b0b0b; }
+.barre { display: grid; grid-template-columns: 110px 1fr 54px; align-items: center; gap: 8px; margin: 4px 0; }
+.barre code { font-size: 13px; overflow: hidden; text-overflow: ellipsis; white-space: pre; }
+.barre .fond-barre { background: var(--code); border-radius: 4px; height: 14px; }
+.barre .plein { background: var(--bleu); height: 100%; border-radius: 4px; }
+.barre span { font-size: 13px; text-align: right; color: var(--doux); }
+.generation { font-size: 16px; } .generation b { color: var(--doux); font-weight: 400; }
+.generation mark { background: transparent; color: var(--vert); font-weight: 600; }
+.journal-tete { display: flex; justify-content: space-between; align-items: baseline; }
+.journal-tete button { background: transparent; color: var(--doux); padding: 0; font-weight: 400; font-size: 13px; }
+#journal { display: flex; flex-direction: column; gap: 10px; max-height: 75vh; overflow-y: auto; }
+.echange { border: 1px solid var(--bord); border-radius: 8px; overflow: hidden; font-size: 12.5px; }
+.echange .ligne { display: flex; gap: 8px; align-items: center; padding: 6px 10px; background: var(--code); }
+.methode { font-weight: 700; font-family: ui-monospace, monospace; }
+.code-http { margin-left: auto; font-weight: 700; } .code-http.ok { color: var(--vert); } .code-http.ko { color: var(--orange); }
+.echange pre { margin: 0; padding: 6px 10px; white-space: pre-wrap; word-break: break-word;
+               font-size: 12px; max-height: 160px; overflow-y: auto; }
+.sens { font-size: 11px; color: var(--doux); padding: 4px 10px 0; text-transform: uppercase; letter-spacing: 1px; }

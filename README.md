@@ -1,55 +1,80 @@
 # Comprendre les LLM
 
-Notebook de démonstration : architecture Transformer (codée en NumPy), Hugging Face,
-dimensionnement RAM (local vs API) et un cas data science avec mise en cache des calculs longs.
+Projet de découverte des grands modèles de langage, en deux volets :
+
+- **des notebooks** : architecture Transformer codée en NumPy, Hugging Face, dimensionnement RAM
+  (local vs API) et un cas data science avec mise en cache des calculs longs ;
+- **une application web** : un front qui dialogue avec un back Python servant GPT-2.
+
+## Architecture
+
+```
+                        ┌──────────────────────── docker compose ─────────────────────────┐
+  navigateur ──:8080──► │  nginx ── /      ──► fichiers du front (frontend/src)          │
+                        │        └─ /api/  ──► backend:8000  (FastAPI + GPT-2)           │
+                        └─────────────────────────────────────────────────────────────────┘
+```
+
+```
+llm-demo/
+├── backend/                      API Python (FastAPI)
+│   ├── app/
+│   │   ├── main.py               point d'entrée : chargement du modèle, routes, middleware
+│   │   ├── config.py             configuration lue dans les variables d'environnement
+│   │   ├── middleware/timing.py  mesure le temps de traitement de chaque requête
+│   │   └── modules/
+│   │       ├── health/           GET /api/health
+│   │       └── llm/              routes.py → service.py (logique) + schemas.py (validation)
+│   ├── tests/test_api.py
+│   ├── requirements.txt
+│   └── Dockerfile
+├── frontend/src/                 interface web (HTML/CSS/JS, sans framework)
+│   ├── index.html, styles.css, main.js
+│   ├── core/                     api.service.js (seul point de contact avec le back), journal.js
+│   └── features/                 tokens.js, next-word.js, generate.js
+├── nginx/nginx.conf              sert le front, redirige /api vers le back
+├── notebooks/                    comprendre_les_llm.py (cellules # %%) et .ipynb
+├── docker-compose.yml
+├── Makefile
+└── requirements.txt              back + notebooks
+```
 
 ## Installation
 
 ```bash
 git clone https://github.com/uxornova/comprendre_les_llm.git
 cd comprendre_les_llm
-python3 -m venv .venv
-source .venv/bin/activate
-pip install torch --index-url https://download.pytorch.org/whl/cpu
-pip install -r requirements.txt
+make install          # crée .venv et installe tout (PyTorch version CPU)
+cp .env.example .env  # optionnel
 ```
 
-Deux versions au contenu identique :
+## Lancer l'application
 
-- `comprendre_les_llm.py` : script Python découpé en cellules `# %%`. Dans VS Code, cliquer sur
-  **Run Cell** au-dessus d'un bloc (ou `Shift+Entrée`) : il s'exécute dans la fenêtre interactive.
-- `comprendre_les_llm.ipynb` : le même contenu en notebook Jupyter, avec les résultats déjà affichés.
+| Commande | Ce qu'elle fait | Adresse |
+|---|---|---|
+| `make dev` | Back en mode rechargement automatique ; il sert aussi le front | http://localhost:8000 |
+| `make up` / `make down` | Tout avec Docker (nginx + back) | http://localhost:8080 |
+| `make test` | Tests de l'API (pytest) | |
 
-Choisir l'interpréteur Python : `Ctrl+Shift+P` → **Python: Select Interpreter** → `.venv`.
-
-Optionnel (partie API) : `export OPENAI_API_KEY="sk-..."` avant de lancer VS Code.
-
-## L'application web (front ↔ back)
-
-Une petite application montre comment une interface web discute avec un serveur qui fait tourner le modèle :
-
-```
- navigateur (front)                       serveur Python (back)
- app/frontend/index.html  ── POST JSON ──►  app/backend.py (FastAPI)
-  boutons, graphiques      ◄── JSON ─────   GPT-2 chargé une fois au démarrage
-```
-
-```bash
-uvicorn app.backend:app --reload
-```
-
-Puis ouvrir http://localhost:8000. Chaque requête et sa réponse JSON s'affichent dans le panneau
-« Journal des échanges ». La documentation interactive de l'API est sur http://localhost:8000/docs.
+La documentation interactive de l'API (Swagger) est sur `/docs`.
+Dans la page, le panneau **« Journal des échanges »** affiche chaque requête envoyée par le front et la
+réponse JSON du back, avec le temps total et le temps passé côté back.
 
 | Route | Rôle |
 |---|---|
-| `GET /api/sante` | Vérifie que le back répond (modèle, RAM utilisée) |
-| `POST /api/tokens` | Découpe un texte en tokens |
-| `POST /api/mot-suivant` | Probabilités des 10 mots suivants les plus probables |
-| `POST /api/generer` | Génère la suite du texte |
+| `GET /api/health` | Vérifie que le back répond (modèle, RAM utilisée) |
+| `POST /api/llm/tokens` | Découpe un texte en tokens |
+| `POST /api/llm/next-word` | Probabilités des mots suivants les plus probables |
+| `POST /api/llm/generate` | Génère la suite du texte |
 
-## Le cache
+## Les notebooks
 
-Les fonctions décorées par `@cache_resultat` enregistrent leur résultat dans `cache/`.
-Au lancement suivant, il est relu en moins d'une seconde. Pour tout recalculer :
-`FORCE_RECALCUL = True` dans la cellule de paramètres, ou supprimer le dossier `cache/`.
+Dans VS Code, ouvrir `notebooks/comprendre_les_llm.py` et cliquer sur **Run Cell** au-dessus d'un bloc
+`# %%` (ou `Shift+Entrée`). Le `.ipynb` a le même contenu, avec les résultats déjà affichés.
+Interpréteur : `Ctrl+Shift+P` → **Python: Select Interpreter** → `.venv`.
+
+Les fonctions décorées par `@cache_resultat` enregistrent leur résultat dans `notebooks/cache/` :
+au lancement suivant, il est relu en moins d'une seconde. Pour tout recalculer :
+`FORCE_RECALCUL = True` dans la cellule de paramètres.
+
+Optionnel (partie API) : définir `OPENAI_API_KEY` avant de lancer VS Code.

@@ -1,0 +1,8 @@
+# PyTorch CPU (plus léger) : pip install torch --index-url https://download.pytorch.org/whl/cpu
+torch
+transformers
+fastapi
+uvicorn
+psutil
+pytest
+httpx

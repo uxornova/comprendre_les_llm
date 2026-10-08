@@ -689,11 +689,14 @@ display(rechercher(QUESTION).style.hide(axis="index").set_properties(subset=["ar
 #
 # ```
 # llm-demo/
-# ├── comprendre_les_llm.ipynb   ← ce notebook
-# ├── requirements.txt           ← dépendances (pip install -r requirements.txt)
-# ├── README.md
-# ├── .gitignore                 ← exclut .venv/, cache/, .env (clés API !)
-# └── cache/                     ← résultats des calculs longs (non versionné)
+# ├── notebooks/                 ← ce notebook (.py et .ipynb) + cache/ des calculs longs
+# ├── backend/                   ← API Python (FastAPI) qui sert GPT-2 : routes → service
+# ├── frontend/src/              ← page web qui appelle l'API (core/api.service.js)
+# ├── nginx/                     ← sert le front et redirige /api vers le back
+# ├── docker-compose.yml         ← lance nginx + back :  make up
+# ├── Makefile                   ← make install / dev / test / up
+# ├── requirements.txt
+# └── .gitignore                 ← exclut .venv/, cache/, .env (clés API !)
 # ```
 
 # %% [markdown]
